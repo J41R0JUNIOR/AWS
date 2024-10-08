@@ -1,7 +1,12 @@
 import dynamoose from "dynamoose";
+import { type } from "express/lib/response";
 
 const PatientDynamoSchema = new dynamoose.Schema(
     {
+        PK: {
+            type: String,
+            hashKey: true
+        },
         id: String,
         taxId: String,
         healthServiceNumber: String,
