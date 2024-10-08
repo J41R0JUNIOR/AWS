@@ -1,6 +1,6 @@
 import dynamoose from "dynamoose";
 
-const schema = new dynamoose.Schema(
+const PatientDynamoSchema = new dynamoose.Schema(
     {
         id: String,
         taxId: String,
@@ -9,6 +9,17 @@ const schema = new dynamoose.Schema(
         name: String,
         weight: Number,
         height: Number,
-        adress
+        adress: {
+            street: String,
+            number: Number,
+            city: String,
+            state: String,
+            country: String
+        },
+        phoneNumber: String
+    },
+    {
+        saveUnknown: true,
+        timestamps: true
     }
-)
+);
