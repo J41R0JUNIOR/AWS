@@ -4,6 +4,13 @@ service: CrudProject001
 provider:
   name: aws
   runtime: nodejs20.x
+  iam: 
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - dynamodb:*
+          Resource: "*"
 
 functions:
   patientsCreate:

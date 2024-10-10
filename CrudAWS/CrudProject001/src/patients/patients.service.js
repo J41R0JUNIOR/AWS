@@ -5,13 +5,17 @@ import crypto  from "node:crypto";
 const PatientModel = dynamoose.model("Patients", PatientDynamoSchema, { create: false });
 
 export async function serviceCreate(payload) {
-    payload.id = crypto.randomUUID();
+    try {
+        payload.id = crypto.randomUUID();
+        payload.PK = `PATIENT#${payload.id}`;
 
-    payload.PK = `PATIENT#${payload.id}`;
+        const result = await PatientModel.create(payload);
 
-    const result = await PatientModel.create(payload);
+        result.PK = undefined;
 
-    result.PK = undefined;
-
-    return result;
+        return result;
+    } catch (error) {
+        console.error("Error creating patient in DynamoDB:", error);
+        throw new Error("Could not create patient");
+    }
 }

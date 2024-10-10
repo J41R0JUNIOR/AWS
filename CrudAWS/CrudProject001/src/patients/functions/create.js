@@ -2,7 +2,7 @@ import middy from "@middy/core";
 import httpJsonBodyParser from "@middy/http-json-body-parser";
 import { serviceCreate } from "../patients.service.js";
 
-const create = (event) => {
+const createPatient = (event) => {
     const patient = serviceCreate(event.body);
     
     return {
@@ -11,6 +11,5 @@ const create = (event) => {
     };
 };
 
-export const handler = middy()
-.use(httpJsonBodyParser())
-.handler(create);
+export const handler = middy(createPatient)
+    .use(httpJsonBodyParser());
