@@ -12,4 +12,5 @@ const createPatient = (event) => {
 };
 
 export const handler = middy(createPatient)
-    .use(httpJsonBodyParser());
+    .use(httpJsonBodyParser())
+    .handler(createPatient);

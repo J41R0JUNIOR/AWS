@@ -14,7 +14,7 @@ provider:
 
 functions:
   patientsCreate:
-    handler: src/patients/functions/create.handler
+    handler: src/patients/functions/createPatient.handler
     events:
       - http:
           method: POST
