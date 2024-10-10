@@ -1,7 +1,6 @@
 import dynamoose from "dynamoose";
-import { type } from "express/lib/response";
 
-const PatientDynamoSchema = new dynamoose.Schema(
+export const PatientDynamoSchema = new dynamoose.Schema(
     {
         PK: {
             type: String,
@@ -14,13 +13,13 @@ const PatientDynamoSchema = new dynamoose.Schema(
         name: String,
         weight: Number,
         height: Number,
-        adress: {
-            street: String,
-            number: Number,
-            city: String,
-            state: String,
-            country: String
-        },
+        // adress: {
+        //     street: String,
+        //     number: Number,
+        //     city: String,
+        //     state: String,
+        //     country: String
+        // },
         phoneNumber: String
     },
     {

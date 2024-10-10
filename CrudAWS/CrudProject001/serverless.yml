@@ -1,6 +1,4 @@
-# "org" ensures this Service is used with the correct Serverless Framework Access Key.
 org: j41r0
-# "service" is the name of this project. This will also be added to your AWS resource names.
 service: CrudProject001
 
 provider:
@@ -8,19 +6,19 @@ provider:
   runtime: nodejs20.x
 
 functions:
-  hello:
-    handler: handler.hello
+  patientsCreate:
+    handler: src/patients/functions/create.handler
     events:
-      - httpApi:
-          path: /
-          method: get
+      - http:
+          method: POST
+          path: patients
 
-recources:
-  Recources:
+resources:
+  Resources:
     patientsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: Patient 
+        TableName: Patients 
         AttributeDefinitions:
           - AttributeName: PK #taxId
             AttributeType: S
@@ -28,6 +26,3 @@ recources:
           - AttributeName: PK
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-        OnDemandThroughput:
-          MaxReadCapacityUnits: 5
-          MaxWriteCapacityUnits: 5
