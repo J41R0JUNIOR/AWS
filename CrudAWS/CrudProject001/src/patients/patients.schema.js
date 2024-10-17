@@ -1,6 +1,6 @@
 import dynamoose from "dynamoose";
 
-export const PatientDynamoSchema = new dynamoose.Schema(
+export const PatientSchema = new dynamoose.Schema(
     {
         PK: {
             type: String,

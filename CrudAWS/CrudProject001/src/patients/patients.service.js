@@ -1,21 +1,56 @@
-import dynamoose from "dynamoose"; 
-import { PatientDynamoSchema } from "./patients.schema.js";
-import crypto  from "node:crypto";
+import * as dynamoose from "dynamoose";
+import { PatientSchema } from "./patients.schema.js";
+import crypto from "node:crypto";
+import {
+    EventBridgeClient,
+    PutEventsCommand,
+} from "@aws-sdk/client-eventbridge";
 
-const PatientModel = dynamoose.model("Patients", PatientDynamoSchema, { create: false });
+const PatientModel = dynamoose.model("Patients", PatientSchema, { create: false });
 
-export async function serviceCreate(payload) {
-    try {
-        payload.id = crypto.randomUUID();
-        payload.PK = `PATIENT#${payload.id}`;
+async function createPatient(payload) {
 
-        const result = await PatientModel.create(payload);
+    payload.id = crypto.randomUUID();
 
-        result.PK = undefined;
+    payload.PK = `PATIENT#${payload.id}`;
 
-        return result;
-    } catch (error) {
-        console.error("Error creating patient in DynamoDB:", error);
-        throw new Error("Could not create patient");
-    }
+    const result = await PatientModel.create(payload);
+
+    result.PK = undefined;
+
+    return {
+        statusCode: 201,
+        body: JSON.stringify(result),
+    };
+};
+
+async function findAllPatients() {
+    const result = await PatientModel.scan().exec();
+
+    return result.map((item) => {
+        item.PK = undefined;
+        return item;
+    });
 }
+
+async function notifyPatientCreated(patient) {
+    const client = new EventBridgeClient({});
+
+    await client.send(
+        new PutEventsCommand({
+            Entries: [
+                {
+                    Source: "aula5-clinica",
+                    DetailType: "PatientCreated",
+                    Detail: JSON.stringify({ patient }),
+                },
+            ],
+        })
+    );
+}
+
+export default {
+    createPatient,
+    findAllPatients,
+    notifyPatientCreated,
+};
