@@ -8,13 +8,29 @@ import {
 
 const PatientModel = dynamoose.model("Patients", PatientSchema, { create: false });
 
+// async function createPatient(payload) {
+
+//     payload.id = crypto.randomUUID();
+
+//     payload.PK = `PATIENT#${payload.id}`;
+
+//     const result = await PatientModel.create(payload);
+
+//     result.PK = undefined;
+
+//     return {
+//         statusCode: 201,
+//         body: JSON.stringify(result),
+//     };
+// };
+
 async function createPatient(payload) {
-
     payload.id = crypto.randomUUID();
-
     payload.PK = `PATIENT#${payload.id}`;
 
-    const result = await PatientModel.create(payload);
+    console.log("Iniciando criação no DynamoDB");
+    const result = await PatientModel.create(payload);//+
+    console.log("Paciente criado no DynamoDB:", result);
 
     result.PK = undefined;
 
@@ -23,6 +39,7 @@ async function createPatient(payload) {
         body: JSON.stringify(result),
     };
 };
+
 
 async function findAllPatients() {
     const result = await PatientModel.scan().exec();
