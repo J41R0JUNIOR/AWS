@@ -8,22 +8,6 @@ import {
 
 const PatientModel = dynamoose.model("Patients", PatientSchema, { create: false });
 
-// async function createPatient(payload) {
-
-//     payload.id = crypto.randomUUID();
-
-//     payload.PK = `PATIENT#${payload.id}`;
-
-//     const result = await PatientModel.create(payload);
-
-//     result.PK = undefined;
-
-//     return {
-//         statusCode: 201,
-//         body: JSON.stringify(result),
-//     };
-// };
-
 async function createPatient(payload) {
     payload.id = crypto.randomUUID();
     payload.PK = `PATIENT#${payload.id}`;
@@ -50,6 +34,16 @@ async function findAllPatients() {
     });
 }
 
+async function findPatientById(id) {
+    const result = await PatientModel.get({ PK: `PATIENT#${id}` });
+  
+    if (result) {
+      result.PK = undefined;
+    }
+  
+    return result;
+}
+
 async function notifyPatientCreated(patient) {
     const client = new EventBridgeClient({});
 
@@ -70,4 +64,5 @@ export default {
     createPatient,
     findAllPatients,
     notifyPatientCreated,
+    findPatientById,
 };

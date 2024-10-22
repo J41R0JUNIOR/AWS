@@ -4,12 +4,13 @@ service: CrudProject001
 provider:
   name: aws
   runtime: nodejs20.x
-  iam: 
+  iam:
     role:
       statements:
-        - Effect: "Allow"
+        - Effect: Allow
           Action:
             - dynamodb:*
+            - events:*
           Resource: "*"
 
 functions:
@@ -27,12 +28,12 @@ functions:
           method: GET
           path: patients/allPatients
         
-  # patientReadById:
-  #   handler: src/patients/functions/read.handler
-  #   events:
-  #     - http:
-  #         method: GET
-  #         path: patients/{id}
+  patientReadById:
+    handler: src/patients/functions/read.findByIdHandler
+    events:
+      - http:
+          method: GET
+          path: patients/{id}
 
   # patientsPatch:
   #   handler: src/patients/functions/patch.handler

@@ -15,6 +15,23 @@ const findAllPatients = async () => {
   };
 };
 
+const findPatientById = async (event) => {
+  const { id } = event.pathParameters;
+  const patient = await PatientsService.findPatientById(id);
+
+  if (!patient) {
+    return {
+      statusCode: 404,
+      body: { message: "Patient not found" },
+    };
+  }
+
+  return {
+    statusCode: 200,
+    body: patient,
+  };
+};
+
 export const findHandler = middy()
   .use(httpHeaderNormalizer())
   .use(httpContentNegotiation())
@@ -40,3 +57,29 @@ export const findHandler = middy()
   .use(httpErrorHandler())
   .use(httpJsonBodyParser({ disableContentTypeError: true }))
   .handler(findAllPatients);
+
+export const findByIdHandler = middy()
+  .use(httpHeaderNormalizer())
+  .use(httpContentNegotiation())
+  .use(
+    httpResponseSerializer({
+      serializers: [
+        {
+          regex: /^application\/xml$/,
+          serializer: ({ body }) => `<message>${body}</message>`,
+        },
+        {
+          regex: /^application\/json$/,
+          serializer: ({ body }) => JSON.stringify(body),
+        },
+        {
+          regex: /^text\/plain$/,
+          serializer: ({ body }) => body,
+        },
+      ],
+      defaultContentType: "application/json",
+    })
+  )
+  .use(httpErrorHandler())
+  .use(httpJsonBodyParser({ disableContentTypeError: true }))
+  .handler(findPatientById);
