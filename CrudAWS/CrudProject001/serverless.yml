@@ -33,21 +33,23 @@ functions:
     events:
       - http:
           method: GET
+          path: patient/{id}
+  
+  patientDelete:
+    handler: src/patients/functions/delete.handler
+    events:
+      - http:
+          method: DELETE
+          path: patient/{id}
+
+  patientsPatch:
+    handler: src/patients/functions/patch.handler
+    events:
+      - http:
+          method: PATCH
           path: patients/{id}
 
-  # patientsPatch:
-  #   handler: src/patients/functions/patch.handler
-  #   events:
-  #     - http:
-  #         method: PATCH
-  #         path: patients/{id}
 
-  # patientsDelete:
-  #   handler: src/patients/functions/delete.handler
-  #   events:
-  #     - http:
-  #         method: DELETE
-  #         path: patients/{id}
 
 resources:
   Resources:

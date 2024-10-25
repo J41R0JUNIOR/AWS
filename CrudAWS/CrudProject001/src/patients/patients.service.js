@@ -24,7 +24,6 @@ async function createPatient(payload) {
     };
 };
 
-
 async function findAllPatients() {
     const result = await PatientModel.scan().exec();
 
@@ -37,11 +36,28 @@ async function findAllPatients() {
 async function findPatientById(id) {
     const result = await PatientModel.get({ PK: `PATIENT#${id}` });
   
-    if (result) {
-      result.PK = undefined;
-    }
+    return {
+        statusCode: 200,
+        body: JSON.stringify(result),
+    };
+}
+
+async function updatePatient(id, payload) {
+    const result = await PatientModel.update({ PK: `PATIENT#${id}` }, payload);
   
-    return result;
+    return {
+        statusCode: 200,
+        body: JSON.stringify(result),
+    };
+}
+
+async function deletePatient(id) {
+    const result = await PatientModel.delete({ PK: `PATIENT#${id}` });
+  
+    return {
+      statusCode: 204,
+      body: JSON.stringify(result),
+    };
 }
 
 async function notifyPatientCreated(patient) {
@@ -65,4 +81,6 @@ export default {
     findAllPatients,
     notifyPatientCreated,
     findPatientById,
+    deletePatient,
+    updatePatient
 };
